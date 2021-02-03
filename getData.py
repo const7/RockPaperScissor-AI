@@ -16,9 +16,9 @@ print("Hit Space to Capture Image")
 cap = cv2.VideoCapture(0) 
 while True:
     ret, frame = cap.read()
-    cv2.imshow("Get Data : " + label,frame[50:350, 100:450])
+    cv2.imshow("Get Data : " + label,frame[50:350, 150:450])
     if cv2.waitKey(1) & 0xFF == ord(" "):
-        cv2.imwrite(os.path.join(SAVE_PATH, "{}{}.jpg".format(label, ct)), frame[50:350, 100:450])
+        cv2.imwrite(os.path.join(SAVE_PATH, "{}{}.jpg".format(label, ct)), frame[50:350, 150:450])
         print("{}{}{}.jpg Captured".format(os.path.join(SAVE_PATH, "{}{}.jpg".format(label, ct)), label, ct))
         ct += 1
     if ct >= maxCt:
