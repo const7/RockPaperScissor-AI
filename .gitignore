@@ -1,3 +1,5 @@
 *.png
 *.jpg
 logs
+model
+__pycache__
