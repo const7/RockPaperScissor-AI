@@ -41,7 +41,7 @@ rounds = 0
 botScore = 0
 playerScore = 0
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
 _, frame = cap.read()
 loaded_model.predict(prepImg(frame[50:350, 100:400]))
 
