@@ -36,9 +36,9 @@ def getData(filepath):
             path = os.path.join(filepath, dr, pic)
             img = cv2.imread(path)
             imgData.append([img, lb])
-            # imgData.append([cv2.flip(img, 1), lb]) #horizontally flipped image
+            imgData.append([cv2.flip(img, 1), lb]) #horizontally flipped image
             # imgData.append([cv2.resize(img[50:250, 50:250], (300,300)), lb]) # zoom : crop in and resize
-            i += 1
+            i += 2
         print("{}: {}".format(dr, i))
     np.random.shuffle(imgData)
 
