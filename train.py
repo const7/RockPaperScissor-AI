@@ -21,19 +21,19 @@ tf.compat.v1.keras.backend.set_session(session)
 
 """Preparing our Data"""
 
-def getData(dataset):
+def getData(filepath):
     shape_to_label = {"rock": np.array([1., 0., 0.]), "paper": np.array([0., 1., 0.]), "scissor": np.array([0., 0., 1.])}
 
     imgData = list()
     labels = list()
 
-    for dr in os.listdir(os.path.join(DATA_PATH, dataset)):
+    for dr in os.listdir(os.path.join(filepath)):
         if dr not in ["rock", "paper", "scissor"]:
             continue
         lb = shape_to_label[dr]
         i = 0
-        for pic in os.listdir(os.path.join(DATA_PATH, dataset, dr)):
-            path = os.path.join(DATA_PATH, dataset, dr, pic)
+        for pic in os.listdir(os.path.join(filepath, dr)):
+            path = os.path.join(filepath, dr, pic)
             img = cv2.imread(path)
             imgData.append([img, lb])
             # imgData.append([cv2.flip(img, 1), lb]) #horizontally flipped image
@@ -49,7 +49,7 @@ def getData(dataset):
 
     return imgData, labels
 
-trainX, trainY = getData("train")
+trainX, trainY = getData(DATA_PATH)
 
 """Model"""
 
@@ -102,8 +102,3 @@ history = dnet.fit(
 # dnet.save_weights(os.path.join(MODEL_PATH, MODEL_WEIGHT))
 with open(os.path.join(MODEL_PATH, MODEL_STRUCT), "w") as json_file:
     json_file.write(dnet.to_json())
-
-# evaluate
-testX, testY = getData("test")
-loss_and_metrics = dnet.evaluate(testX, testY)
-print(loss_and_metrics)
