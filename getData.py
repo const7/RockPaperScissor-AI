@@ -4,7 +4,7 @@ import sys
 
 label = sys.argv[1]
 
-SAVE_PATH = os.path.join(os.getcwd(), "data", label)
+SAVE_PATH = os.path.join(os.getcwd(), "data", "train", label)
 
 if not os.path.exists(SAVE_PATH):
     os.makedirs(SAVE_PATH)
