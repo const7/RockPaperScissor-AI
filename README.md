@@ -11,7 +11,7 @@ Here we have getData.py which is run like this
 python getData.py label startIndex endIndex
 ```
 
-This will essentialy make a folder of name label and store (endIndex-startIndex+1) images .
+This will essentialy make a folder of name label and store (endIndex-startIndex+1) images in `data`.
 
 ## Training our Model
 Next we move to training our model. Here we have used the DenseNet model available from keras.applications as a base model to work upon. It is followed by a MaxPooling Layer which is Flattened and finally run through a Dense Layer with 3 Output Neurons and SoftMax Activation to predict our output from 3 Classes Rock, Paper and Scissor.
@@ -27,8 +27,7 @@ This will iterate over the files produced by getData.py and train our Model. Onc
 Due to lack of computational power I had to train the model using Google Colab by setting Hardware Accelration to GPU.
 
 ## Time to play!
-Now we load our Model Architecture and weights and finally play the game. Refer play.py
-Before running make sure the model.h5 and model.json files are in same folder as play.py.
+Now we load our Model Architecture and weights and finally play the game.
 To Run:
 
 ```
