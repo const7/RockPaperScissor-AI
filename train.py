@@ -3,7 +3,14 @@ import os
 import sys
 import cv2
 import numpy as np
+import tensorflow as tf
 
+
+# avoid "CUBLAS_STATUS_ALLOC_FAILED"
+config = tf.compat.v1.ConfigProto(gpu_options=tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.9))
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=config)
+tf.compat.v1.keras.backend.set_session(session)
 
 """Preparing our Data"""
 
@@ -23,13 +30,13 @@ for dr in os.listdir(DATA_PATH):
         path = os.path.join(DATA_PATH,dr + "/" + pic)
         img = cv2.imread(path)
         imgData.append([img, lb])
-        imgData.append([cv2.flip(img, 1), lb]) #horizontally flipped image
-        imgData.append([cv2.resize(img[50:250, 50:250], (300,300)), lb]) # zoom : crop in and resize
-        i += 3
+        # imgData.append([cv2.flip(img, 1), lb]) #horizontally flipped image
+        # imgData.append([cv2.resize(img[50:250, 50:250], (300,300)), lb]) # zoom : crop in and resize
+        i += 1
     print("{}:{}".format(dr, i))
 np.random.shuffle(imgData)
 
-# construct train data
+# reshape data to model input
 imgData,labels = zip(*imgData)
 imgData = np.array(imgData)
 labels = np.array(labels)
@@ -43,10 +50,11 @@ from keras.optimizers import Adam
 from keras.applications.densenet import DenseNet121
 
 """DenseNet"""
-
+# load a pre-trained weights
 densenet = DenseNet121(include_top=False, weights="imagenet", classes=3, input_shape=(300, 300, 3))
-densenet.trainable=True
+densenet.trainable = True
 
+# define model architecture
 def genericModel(base):
     model = Sequential()
     model.add(base)
@@ -58,6 +66,7 @@ def genericModel(base):
 
 dnet = genericModel(densenet)
 
+# define the configuration required for training
 checkpoint = ModelCheckpoint(
     "model.h5", 
     monitor="val_acc", 
@@ -66,18 +75,20 @@ checkpoint = ModelCheckpoint(
     save_weights_only=True,
     mode="auto"
 )
-
 es = EarlyStopping(patience=3)
+tb = tf.keras.callbacks.TensorBoard(log_dir="./logs")
 
+# train our model
 history = dnet.fit(
     x=imgData,
     y=labels,
-    batch_size = 16,
-    epochs=8,
-    callbacks=[checkpoint, es],
+    batch_size=4,
+    epochs=4,
+    callbacks=[checkpoint, es, tb],
     validation_split=0.2
 )
 
+# save model
 dnet.save_weights("model.h5")
 
 with open("model.json", "w") as json_file:

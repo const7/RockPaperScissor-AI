@@ -20,7 +20,7 @@ Here we have trai.py which is run like this <br>
 
 
 ```
-python train.py pathToImages
+python train.py
 ```
 
 This will iterate over the files produced by getData.py and train our Model. Once trained the Model architecture is stored in a json file and the weights are stored in .h5 file.
